@@ -1,5 +1,5 @@
 
-# Project Title
+# Treats - Food Ordering App
 
 This a food-ordering-app made using React as a frontend and Django as backend and PostgreSQL as database. 
 
