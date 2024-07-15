@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import products from "../assets/fake-data/products";
+// import newProducts from "../assets/fake-data/newProducts";
 import { useParams } from "react-router-dom";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/common-section/CommonSection";
@@ -18,20 +18,31 @@ const FoodDetails = () => {
   const [enteredName, setEnteredName] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
   const [reviewMsg, setReviewMsg] = useState("");
+  const [newProducts,setNewProducts] = useState([]);
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const product = products.find((product) => product.id === id);
-  const [previewImg, setPreviewImg] = useState(product.image01);
-  const { title, price, category, desc, image01 } = product;
+  const getProduct = async () => {
+    const response = await fetch("api/products/");
+    const data = await response.json();
+    setNewProducts(data);
+  };
+  
+  useEffect(() => {
+    getProduct();
+    // getCart();
+  }, []);
 
-  const relatedProduct = products.filter((item) => category === item.category);
+  const product = newProducts.find((product) => product.id === id);
+  const [previewImg, setPreviewImg] = useState(product.image01);
+  const { name, price, category, desc, image01 } = product;
+
 
   const addItem = () => {
     dispatch(
       cartActions.addItem({
         id,
-        title,
+        name,
         price,
         image01,
       })
@@ -54,7 +65,7 @@ const FoodDetails = () => {
 
   return (
     <Helmet title="Product-details">
-      <CommonSection title={title} />
+      <CommonSection />
 
       <section>
         <Container>
@@ -91,7 +102,7 @@ const FoodDetails = () => {
 
             <Col lg="6" md="6">
               <div className="single__product-content">
-                <h2 className="product__title mb-3">{title}</h2>
+                <h2 className="product__title mb-3">{name}</h2>
                 <p className="product__price">
                   {" "}
                   Price: <span>${price}</span>
@@ -186,11 +197,11 @@ const FoodDetails = () => {
               <h2 className="related__Product-title">You might also like</h2>
             </Col>
 
-            {relatedProduct.map((item) => (
+            {/* {relatedProduct.map((item) => (
               <Col lg="3" md="4" sm="6" xs="6" className="mb-4" key={item.id}>
                 <ProductCard item={item} />
               </Col>
-            ))}
+            ))} */}
           </Row>
         </Container>
       </section>
